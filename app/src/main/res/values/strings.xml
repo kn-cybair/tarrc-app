@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TARRC</string>
+    <string name="deviceName">Device Name</string>
+    <string name="enableBtn">Enable</string>
+    <string name="visibleBtn">Visibility</string>
+    <string name="searchBtn">Search</string>
+    <string name="connectBtn">Connect</string>
 </resources>
