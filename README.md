@@ -4,7 +4,7 @@ Project is focused on creating application for robot control and data aquisition
 
 ### Getting started
 
-You can download whole project and compile apk package on your own or download it [here](404.html).
+You can download whole project and compile apk package on your own or download it [here](permalink: /404.html).
 
 #### Software and hardware
 
