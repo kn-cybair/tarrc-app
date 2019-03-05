@@ -1,2 +1,2 @@
 # tarrc-app
-Android application for a robot
+Arduino application for a robot
