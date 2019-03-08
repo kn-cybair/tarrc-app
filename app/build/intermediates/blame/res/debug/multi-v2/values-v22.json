@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/home/kris/AndroidStudioProjects/TARRC/tarrc-app/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v22/values-v22.xml",
+            "outputFile": "C:\\Users\\krzst\\Documents\\Repos\\tarrc-app\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v22\\values-v22.xml",
             "map": [
                 {
-                    "source": "/home/kris/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/2a76444282a11e424e32225aa5d0d642/res/values-v22/values-v22.xml",
+                    "source": "C:\\Users\\krzst\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\7c2fbd8191dbeb23af95064d4c628488\\res\\values-v22\\values-v22.xml",
                     "from": {
                         "startLines": "2,3,4,9",
                         "startColumns": "4,4,4,4",
