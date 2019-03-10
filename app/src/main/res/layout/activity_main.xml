@@ -31,16 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/visibleBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:layout_marginEnd="36dp"
-        android:text="@string/visibleBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/searchBtn"
         android:layout_width="180dp"
@@ -60,17 +50,16 @@
     <ListView
         android:id="@+id/devicesLIst"
         android:layout_width="395dp"
-        android:layout_height="325dp"
+        android:layout_height="183dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/connectBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.669" />
+        app:layout_constraintTop_toBottomOf="@+id/searchBtn" />
 
     <Button
         android:id="@+id/connectBtn"
@@ -87,4 +76,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.959" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/searchBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deviceName" />
 </android.support.constraint.ConstraintLayout>

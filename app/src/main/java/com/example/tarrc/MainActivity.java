@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,8 +35,8 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     /* Elements of UI */
-    TextView deviceName;
-    CheckBox enableButton, visibleButton;
+    TextView deviceName, textView;
+    CheckBox enableButton;
     Button searchButton, connectButton;
     ListView devicesList;
 
@@ -52,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
         /* Get all elements from the View linked to the Controller */
         deviceName = findViewById(R.id.deviceName);
+        textView = findViewById(R.id.textView);
         enableButton = findViewById(R.id.enableBtn);
-        visibleButton = findViewById(R.id.visibleBtn);
         searchButton = findViewById(R.id.searchBtn);
         devicesList = findViewById(R.id.devicesLIst);
         connectButton = findViewById(R.id.connectBtn);
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
             enableButton.setChecked(true);
         }
 
+
+
         enableButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -90,16 +93,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        visibleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                    startActivityForResult(getVisible,0);
-                    Toast.makeText(MainActivity.this, "Visible for 2 min", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +103,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+        }
+    };
 
     private void list() {
         pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
     }
 
     private String getLocalBluetoothName() {
