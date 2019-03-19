@@ -2,7 +2,7 @@
   MIT License 2019
   ---
   TARRC Android application
-  version: 0.1
+  version: 0.2
   Purpose: Control robot and present collected data.
   ---
   @author: Krzysztof Stezala
@@ -35,15 +35,17 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     /* Elements of UI */
-    TextView deviceName, textView;
-    CheckBox enableButton;
-    Button searchButton, connectButton;
-    ListView devicesList;
+    Button searchButton;
+    ListView deviceList;
 
     /* Bluetooth components */
     private BluetoothAdapter bluetoothAdapter;
     private Set<BluetoothDevice> pairedDevices;
 
+    /* Unique extra data identifier for new activity */
+    static final String EXTRA_ADDRESS = "com.example.tarrc.extra_address";
+
+    /*  */
     static final int BLUETOOTH_REQUEST_CODE = 0;
 
     @Override
@@ -52,106 +54,62 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /* Get all elements from the View linked to the Controller */
-        deviceName = findViewById(R.id.deviceName);
-        textView = findViewById(R.id.textView);
-        enableButton = findViewById(R.id.enableBtn);
-        searchButton = findViewById(R.id.searchBtn);
-        devicesList = findViewById(R.id.devicesLIst);
-        connectButton = findViewById(R.id.connectBtn);
-
-        /* Update the user's device name in the main view */
-        deviceName.setText(getLocalBluetoothName());
+        searchButton = findViewById(R.id.searchButton);
+        deviceList = findViewById(R.id.deviceList);
 
         /* Connect to the default BT adapter on the device*/
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
         /* If no BT adapter found, terminate the app */
-        if(bluetoothAdapter==null){
-            Toast.makeText(this,"Bluetooth not supported", Toast.LENGTH_SHORT).show();
+        if(bluetoothAdapter == null){
+            Toast.makeText(getApplicationContext(),"Bluetooth Device Not Available", Toast.LENGTH_SHORT).show();
             finish();
         }
-
-        /* If Bt was enabled before, mark checkbox as true*/
-        if(bluetoothAdapter.isEnabled()){
-            enableButton.setChecked(true);
-        }
-
-
-
-        enableButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(!isChecked){
-                    bluetoothAdapter.disable();
-                    Toast.makeText(MainActivity.this, "Turned off", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intentOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(intentOn,BLUETOOTH_REQUEST_CODE);
-
-                }
-
+        else{
+            if(bluetoothAdapter.isEnabled()){
+                Toast.makeText(getApplicationContext(),"Turned On", Toast.LENGTH_SHORT).show();
             }
-        });
-
+            else{
+                Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(turnBTon,1);
+            }
+        }
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                list();
+                pairedDevicesList();
             }
         });
-
-
     }
 
-    private AdapterView.OnItemClickListener listClick = new AdapterView.OnItemClickListener() {
+    private void pairedDevicesList() {
+        pairedDevices = bluetoothAdapter.getBondedDevices();
+        ArrayList list = new ArrayList();
+
+        if(pairedDevices.size()>0){
+            for (BluetoothDevice bt : pairedDevices){
+                list.add(bt.getName() + "\n" + bt.getAddress()); //Get the device's name and the address
+            }
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+        }
+
+        final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,list);
+        deviceList.setAdapter(adapter);
+        deviceList.setOnItemClickListener(myListClickListener);
+    }
+
+    private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
+            // get mac address
+            String info = ((TextView)view).getText().toString();
+            String address = info.substring(info.length()-17);
+            Intent i = new Intent(MainActivity.this, CarControl.class);
+            i.putExtra(EXTRA_ADDRESS, address);
+            startActivity(i);
         }
     };
 
-    private void list() {
-        pairedDevices = bluetoothAdapter.getBondedDevices();
-
-        ArrayList list = new ArrayList();
-        for (BluetoothDevice bt : pairedDevices){
-            list.add(bt.getName());
-        }
-
-        Toast.makeText(this, "Showing Devices", Toast.LENGTH_SHORT).show();
-
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        devicesList.setAdapter(adapter);
-
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == BLUETOOTH_REQUEST_CODE) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(MainActivity.this, "Turned on", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivity.this, "Operation aborted", Toast.LENGTH_SHORT).show();
-                enableButton.setChecked(false);
-            }
-
-        }
-
-    }
-
-    private String getLocalBluetoothName() {
-        if(bluetoothAdapter==null){
-            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        }
-        String name = bluetoothAdapter.getName();
-        if(name==null){
-            name = bluetoothAdapter.getAddress();
-        }
-        return name;
-    }
 }
