@@ -2,8 +2,10 @@
   MIT License 2019
   ---
   TARRC Android application
-  version: 0.2
-  Purpose: Control robot and present collected data.
+  version: 0.3
+  Purpose: TARRC is an educational project created by CybAiR to teach students about basics of PCB
+           board design, 3D modeling, Android and Arduino programming.
+  File: MainActivity.java
   ---
   @author: Krzysztof Stezala
   ---
@@ -45,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
     /* Unique extra data identifier for new activity */
     static final String EXTRA_ADDRESS = "com.example.tarrc.extra_address";
 
-    /*  */
-    static final int BLUETOOTH_REQUEST_CODE = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,11 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Turned On", Toast.LENGTH_SHORT).show();
             }
             else{
+                /* Start Bluetooth */
                 Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(turnBTon,1);
             }
         }
 
+        /* List all available devices */
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /* Lists alla devices that are paired */
     private void pairedDevicesList() {
         pairedDevices = bluetoothAdapter.getBondedDevices();
         ArrayList list = new ArrayList();

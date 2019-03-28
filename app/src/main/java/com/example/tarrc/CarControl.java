@@ -1,10 +1,25 @@
+/*
+  MIT License 2019
+  ---
+  TARRC Android application
+  version: 0.3
+  Purpose: TARRC is an educational project created by CybAiR to teach students about basics of PCB
+           board design, 3D modeling, Android and Arduino programming.
+  File: CarControl.java
+  ---
+  @author: Krzysztof Stezala
+  ---
+  Provided by CybAiR Science Club at
+  Institute of Control, Robotics and Information Engineering of
+  Poznan University of Technology
+*/
+
 package com.example.tarrc;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +38,7 @@ public class CarControl extends AppCompatActivity {
     private boolean isRobotOn = false;
     private boolean isAutonomous = false;
 
-    Button driveForward, driveBackward, driveRight, driveLeft, switchMode, emergencyStop, onButton, disconnectButton;
+    Button driveForward, driveBackward, driveRight, driveLeft, switchMode, emergencyStop, onButton, sensorButton;
     TextView currentStatus;
     String address = null;
     private ProgressDialog progressDialog;
@@ -42,7 +57,7 @@ public class CarControl extends AppCompatActivity {
         onButton = (Button) findViewById(R.id.onButton);
         emergencyStop = (Button) findViewById(R.id.emergencyStop);
         switchMode = (Button) findViewById(R.id.switchMode);
-        disconnectButton = (Button) findViewById(R.id.disconnectButton);
+        sensorButton = (Button) findViewById(R.id.sensorButton);
         driveBackward = (Button) findViewById(R.id.driveBackward);
         driveForward = (Button) findViewById(R.id.driveForward);
         driveLeft = (Button) findViewById(R.id.driveLeft);
@@ -80,7 +95,7 @@ public class CarControl extends AppCompatActivity {
             }
         });
 
-        disconnectButton.setOnClickListener(new View.OnClickListener() {
+        sensorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 disconnectDevice();
@@ -165,12 +180,49 @@ public class CarControl extends AppCompatActivity {
         isRobotOn = !isRobotOn;
         if (isRobotOn) {
             Toast.makeText(this, "ON", Toast.LENGTH_SHORT).show();
+            onButton.setText("ON");
+            driveBackward.setEnabled(true);
+            driveForward.setEnabled(true);
+            driveLeft.setEnabled(true);
+            driveRight.setEnabled(true);
+            if(bluetoothSocket!=null){
+                try{
+                    bluetoothSocket.getOutputStream().write("1".toString().getBytes());
+                }
+                catch (IOException e){
+                    Toast.makeText(CarControl.this,"MF #08", Toast.LENGTH_SHORT).show();
+                }
+            }
         } else {
             Toast.makeText(this, "OFF", Toast.LENGTH_SHORT).show();
+            onButton.setText("OFF");
+            driveBackward.setEnabled(false);
+            driveForward.setEnabled(false);
+            driveLeft.setEnabled(false);
+            driveRight.setEnabled(false);
+            if(bluetoothSocket!=null){
+                try{
+                    bluetoothSocket.getOutputStream().write("2".toString().getBytes());
+                }
+                catch (IOException e){
+                    Toast.makeText(CarControl.this,"MF #09", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
+        doNothing();
     }
 
     private void cutPower() {
+        if(bluetoothSocket!=null){
+            try{
+                bluetoothSocket.getOutputStream().write("C".toString().getBytes());
+            }
+            catch (IOException e){
+                Toast.makeText(CarControl.this,"MF #07", Toast.LENGTH_SHORT).show();
+            }
+        }
+        doNothing();
+
     }
 
     private void changeMode() {
